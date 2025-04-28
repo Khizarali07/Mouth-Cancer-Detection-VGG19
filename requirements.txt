@@ -1,5 +1,4 @@
 Flask
 tensorflow
 numpy
-requests
-gdown
+Pillow
