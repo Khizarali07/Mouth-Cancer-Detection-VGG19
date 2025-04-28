@@ -3,7 +3,7 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.image import load_img, img_to_array
 import numpy as np
 import os
-import requests
+import gdown  # Import gdown to handle the Google Drive file download
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -15,14 +15,12 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Model file path
 MODEL_PATH = 'best_model_vgg19.keras'
-MODEL_DOWNLOAD_URL = 'https://drive.google.com/file/d/1co6Ehv31-PGSDqdJnR9XVst4N3dCSb_E/view?usp=sharing'  # <-- update this
+MODEL_DOWNLOAD_URL = 'https://drive.google.com/uc?export=download&id=1co6Ehv31-PGSDqdJnR9XVst4N3dCSb_E'  # Direct download link
 
 # Check if model exists, else download
 if not os.path.exists(MODEL_PATH):
     print("Model not found. Downloading model...")
-    response = requests.get(MODEL_DOWNLOAD_URL)
-    with open(MODEL_PATH, 'wb') as f:
-        f.write(response.content)
+    gdown.download(MODEL_DOWNLOAD_URL, MODEL_PATH, quiet=False)  # Use gdown for downloading
     print("Model downloaded successfully.")
 
 # Load the trained model once
