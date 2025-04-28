@@ -14,12 +14,16 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Model file path
 MODEL_PATH = 'best_model_vgg19.keras'
-
-# Load the trained model once
-model = load_model(MODEL_PATH)
+model = None  # Delay loading the model
 
 # Prediction function
+def load_model_once():
+    global model
+    if model is None:
+        model = load_model(MODEL_PATH)
+
 def predict_image(img_path):
+    load_model_once()  # Ensure model is loaded only when needed
     img = load_img(img_path, target_size=(224, 224))
     img_array = img_to_array(img) / 255.0
     img_array = np.expand_dims(img_array, axis=0)
@@ -55,4 +59,6 @@ def index():
     return render_template('index.html', prediction=prediction_text, img_path=img_path)
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=10000)
+    import os
+    port = int(os.environ.get('PORT', 5000))  # Render will set PORT env var
+    app.run(host='0.0.0.0', port=port)
